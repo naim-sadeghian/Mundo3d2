@@ -9,12 +9,7 @@
 #include <iostream>
 #include "glsl.h"
 #include <time.h>
-#include "NaveEspacial.h"
-#include "Tetera.h"
-#include "Triangulo.h"
-#include "Arbol.h"
-#include "Objeto32.h"
-#define NUM_NAVES 5
+#include "glm/glm.h"
 
 //-----------------------------------------------------------------------------
 
@@ -28,13 +23,7 @@ protected:
    clock_t time0,time1;
    float timer010;  // timer counting 0->1->0
    bool bUp;        // flag if counting up or down.
-   NaveEspacial misNaves[NUM_NAVES];
-   Tetera miTetera;
-   Triangulo miTriangulo;
-   Arbol miArbol;
-   Objeto32 Malla[NUM_NAVES];
-
-  
+   GLMmodel* objmodel_ptr;
 
 public:
 	myWindow(){}
@@ -44,19 +33,13 @@ public:
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
       //timer010 = 0.09; //for screenshot!
-      
-     
+      glPushMatrix();
       if (shader) shader->begin();
-        glPushMatrix();
-        glRotatef(timer010 * 360, 0.5, 1.0f, 0.1f);
-
-        //glmDraw(objmodel_ptr, GLM_SMOOTH | GLM_MATERIAL);
+         //glRotatef(timer010*360, 0.5, 1.0f, 0.1f);
+        glmDraw(objmodel_ptr, GLM_SMOOTH | GLM_MATERIAL);
         
-        Malla[0].DibujarMalla(0.0, 0.0, 0.0);
-        Malla[1].DibujarMalla(0.0, 2.0, 0.0);
-        Malla[2].DibujarMalla(0.0, -2.0, 0.0);
-        Malla[3].DibujarMalla(0.0, -20.0, 0.0);
-        Malla[4].DibujarMalla(0.0, 20.0, 0.0);
+
+
       if (shader) shader->end();
       glutSwapBuffers();
       glPopMatrix();
@@ -72,34 +55,22 @@ public:
 	// is already available!
 	virtual void OnInit()
 	{
-		glClearColor(0.5f, 0.5f, 1.0f, 0.0f); //Los R G B Alpha que es transparencia
-		glShadeModel(GL_SMOOTH); //Shading: Smooth o Flat
-		glEnable(GL_DEPTH_TEST); //Buffer que calcula la profundidad, no sabe que esta al frente sino
+		glClearColor(0.5f, 0.5f, 1.0f, 0.0f);
+		glShadeModel(GL_SMOOTH);
+		glEnable(GL_DEPTH_TEST);
 
-        misNaves[0] = NaveEspacial();
-        miTetera = Tetera();
-        miTriangulo = Triangulo();
-        miArbol = Arbol();
+        objmodel_ptr = NULL;
+        if (!objmodel_ptr)
+        {
+            objmodel_ptr = glmReadOBJ("./modelos/bunny.obj");
+            if (!objmodel_ptr)
+                exit(0);
 
-        for (int i = 0; i < NUM_NAVES; i++) {
-            switch (i) {
-            case 0:
-                Malla[i].AbrirMalla("./modelos/AlienPlant.obj");
-                break;
-            case 1:
-                Malla[i].AbrirMalla("./modelos/Astronauta.obj");
-                break;
-            case 2:
-                Malla[i].AbrirMalla("./modelos/soloTorre.obj");
-                break;
-            case 3:
-                Malla[i].AbrirMalla("./modelos/Cristales.obj");
-                break;
-            case 4:
-                Malla[i].AbrirMalla("./modelos/Nave1.obj");
-                break;
-            }
+            glmUnitize(objmodel_ptr);
+            glmFacetNormals(objmodel_ptr);
+            glmVertexNormals(objmodel_ptr, 90.0);
         }
+
 
 
 		shader = SM.loadfromFile("vertexshader.txt","fragmentshader.txt"); // load (and compile, link) from file
@@ -119,16 +90,16 @@ public:
 	}
 
 	virtual void OnResize(int w, int h)
-   {    // open GL es una pila de estados
+   {
       if(h == 0) h = 1;
 	   float ratio = 1.0f * (float)w / (float)h;
 
-      glMatrixMode(GL_PROJECTION); //Modo de proyeccion o de view
+      glMatrixMode(GL_PROJECTION);
 	   glLoadIdentity();
 	
 	   glViewport(0, 0, w, h);
 
-      gluPerspective(90,ratio,1,100);
+      gluPerspective(45,ratio,1,100);
 	   glMatrixMode(GL_MODELVIEW);
 	   glLoadIdentity();
 	   gluLookAt(0.0f,0.0f,4.0f, 
