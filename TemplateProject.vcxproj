@@ -89,7 +89,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Arbol.h" />
     <ClInclude Include="cwc\include\glApplication.h" />
     <ClInclude Include="cwc\include\glsl.h" />
     <ClInclude Include="cwc\include\glutwindow.h" />
@@ -104,13 +103,9 @@
     <ClInclude Include="glew\include\Gl\glxew.h" />
     <ClInclude Include="glew\include\Gl\wglew.h" />
     <ClInclude Include="glm\glm.h" />
-    <ClInclude Include="NaveEspacial.h" />
-    <ClInclude Include="Objeto32.h" />
-    <ClInclude Include="Tetera.h" />
-    <ClInclude Include="Triangulo.h" />
+    <ClInclude Include="Objeto3D.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Arbol.cpp" />
     <ClCompile Include="cwc\source\glApplication.cpp" />
     <ClCompile Include="cwc\source\glsl.cpp" />
     <ClCompile Include="cwc\source\glutwindow.cpp" />
@@ -140,10 +135,7 @@
     <ClCompile Include="glew\source\glew.c" />
     <ClCompile Include="glm\glm.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="NaveEspacial.cpp" />
-    <ClCompile Include="Objeto32.cpp" />
-    <ClCompile Include="Tetera.cpp" />
-    <ClCompile Include="Triangulo.cpp" />
+    <ClCompile Include="Objeto3D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="freeglut\source\freeglutdll.def" />

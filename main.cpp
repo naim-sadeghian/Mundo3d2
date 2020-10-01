@@ -10,6 +10,7 @@
 #include "glsl.h"
 #include <time.h>
 #include "glm/glm.h"
+#include "Objeto3D.h"
 
 //-----------------------------------------------------------------------------
 
@@ -23,7 +24,12 @@ protected:
    clock_t time0,time1;
    float timer010;  // timer counting 0->1->0
    bool bUp;        // flag if counting up or down.
-   GLMmodel* objmodel_ptr;
+   // objetos que seran dibujados
+   Objeto3D planta;
+   Objeto3D astronauta;
+   Objeto3D cristal;
+   Objeto3D nave;
+   Objeto3D torre;
 
 public:
 	myWindow(){}
@@ -36,7 +42,10 @@ public:
       glPushMatrix();
       if (shader) shader->begin();
          //glRotatef(timer010*360, 0.5, 1.0f, 0.1f);
-        glmDraw(objmodel_ptr, GLM_SMOOTH | GLM_MATERIAL);
+
+
+        // con esto se dibujan las mallas 
+        nave.DibujarMalla(0.0, 0.0, 0.0);
         
 
 
@@ -59,19 +68,12 @@ public:
 		glShadeModel(GL_SMOOTH);
 		glEnable(GL_DEPTH_TEST);
 
-        objmodel_ptr = NULL;
-        if (!objmodel_ptr)
-        {
-            objmodel_ptr = glmReadOBJ("./modelos/bunny.obj");
-            if (!objmodel_ptr)
-                exit(0);
-
-            glmUnitize(objmodel_ptr);
-            glmFacetNormals(objmodel_ptr);
-            glmVertexNormals(objmodel_ptr, 90.0);
-        }
-
-
+        // documentos que contienen las mallas
+        planta.AbrirMalla("./modelos/AlienPlant.obj");
+        astronauta.AbrirMalla("./modelos/Astronauta.obj");
+        cristal.AbrirMalla("./modelos/Cristales.obj");
+        nave.AbrirMalla("./modelos/Nave1.obj");
+        torre.AbrirMalla("./modelos/soloTorre.obj");
 
 		shader = SM.loadfromFile("vertexshader.txt","fragmentshader.txt"); // load (and compile, link) from file
 		if (shader==0) 

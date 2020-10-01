@@ -72,14 +72,10 @@
     <ClInclude Include="cwc\include\glWindow.h">
       <Filter>cwc\include</Filter>
     </ClInclude>
-    <ClInclude Include="NaveEspacial.h" />
-    <ClInclude Include="Tetera.h" />
-    <ClInclude Include="Triangulo.h" />
-    <ClInclude Include="Arbol.h" />
     <ClInclude Include="glm\glm.h">
       <Filter>GLM</Filter>
     </ClInclude>
-    <ClInclude Include="Objeto32.h" />
+    <ClInclude Include="Objeto3D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glew\source\glew.c">
@@ -164,14 +160,10 @@
       <Filter>cwc\source</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="NaveEspacial.cpp" />
-    <ClCompile Include="Tetera.cpp" />
-    <ClCompile Include="Triangulo.cpp" />
-    <ClCompile Include="Arbol.cpp" />
     <ClCompile Include="glm\glm.cpp">
       <Filter>GLM</Filter>
     </ClCompile>
-    <ClCompile Include="Objeto32.cpp" />
+    <ClCompile Include="Objeto3D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="freeglut\source\freeglutdll.def">
