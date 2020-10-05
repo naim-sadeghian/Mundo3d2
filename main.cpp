@@ -46,6 +46,7 @@ public:
 
         // con esto se dibujan las mallas 
         nave.DibujarMalla(0.0, 0.0, 0.0);
+        planta.DibujarMalla(2.0, 2.0, 0.0);
         
 
 
