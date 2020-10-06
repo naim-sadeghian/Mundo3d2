@@ -42,17 +42,31 @@ public:
       glPushMatrix();
       if (shader) shader->begin();
          //glRotatef(timer010*360, 0.5, 1.0f, 0.1f);
-
-
         // con esto se dibujan las mallas 
-        nave.DibujarMalla(0.0, 0.0, 0.0);
-        planta.DibujarMalla(2.0, 2.0, 0.0);
         
+      
+        astronauta.DibujarMalla(0.0, -0.3, 1.0);
+        
+        
+        glPopMatrix();
+        glPushMatrix();
+        nave.DibujarMalla(2.0, 0.0, 2.0);
+        glPopMatrix();
+        glPushMatrix();
+        planta.DibujarMalla(-4.0, 0.0, 0.0);
+        glPopMatrix();
+        glPushMatrix();
+        cristal.DibujarMalla(2.0, 0.0, -1.0);
+        cristal.DibujarMalla(-1.0, 0.0, 0.0);
 
-
+        glPopMatrix();
+        glPushMatrix();
+        glRotatef(270, 0.0, 1.0, 0.0);
+        torre.DibujarMalla(-1.0, 0.0, 1.0);
+        glPopMatrix();
       if (shader) shader->end();
       glutSwapBuffers();
-      glPopMatrix();
+      
 
       UpdateTimer();
 
@@ -102,7 +116,7 @@ public:
 	
 	   glViewport(0, 0, w, h);
 
-      gluPerspective(45,ratio,1,100);
+      gluPerspective(90,ratio,1,100);
 	   glMatrixMode(GL_MODELVIEW);
 	   glLoadIdentity();
 	   gluLookAt(0.0f,0.0f,4.0f, 
