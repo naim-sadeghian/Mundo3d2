@@ -1,11 +1,18 @@
 #include "Objeto3D.h"
 
-void Objeto3D::DibujarMalla(float _x, float _y, float _z) {
+void Objeto3D::DibujarMalla(float _x, float _y, float _z, bool texturizado) {
     x = _x;
     y = _y;
     z = _z;
+
     glTranslatef(x, y, z);
-    glmDraw(objmodel_ptr, GLM_SMOOTH | GLM_MATERIAL);
+    if (texturizado) {
+        glmDraw(objmodel_ptr, GLM_SMOOTH | GLM_MATERIAL | GLM_TEXTURE);
+    }
+    else {
+        glmDraw(objmodel_ptr, GLM_SMOOTH | GLM_MATERIAL);
+    }
+    
 }
 
 void Objeto3D::AbrirMalla(char* objeto) {

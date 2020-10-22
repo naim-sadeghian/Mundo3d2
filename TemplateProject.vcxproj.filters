@@ -31,6 +31,9 @@
     <Filter Include="GLM">
       <UniqueIdentifier>{ff8b32c5-c5f2-44cf-a810-2a6edae6ec9d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FreeImage">
+      <UniqueIdentifier>{b3c6f09e-4403-42cc-a795-363f5c578efd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="glew\include\Gl\glew.h">
@@ -76,6 +79,9 @@
       <Filter>GLM</Filter>
     </ClInclude>
     <ClInclude Include="Objeto3D.h" />
+    <ClInclude Include="FreeImage\FreeImage.h">
+      <Filter>FreeImage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glew\source\glew.c">
@@ -173,5 +179,10 @@
   <ItemGroup>
     <Text Include="fragmentshader.txt" />
     <Text Include="vertexshader.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="FreeImage\FreeImage.lib">
+      <Filter>FreeImage</Filter>
+    </Library>
   </ItemGroup>
 </Project>

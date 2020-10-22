@@ -11,5 +11,5 @@ class Objeto3D
 	float x, y, z;
 public:
 	void AbrirMalla(char* objeto);
-	void DibujarMalla(float _x, float _y, float _z);
+	void DibujarMalla(float _x, float _y, float _z, bool texturizado);
 };

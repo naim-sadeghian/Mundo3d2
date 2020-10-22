@@ -1,6 +1,6 @@
 # Blender v2.90.1 OBJ File: ''
 # www.blender.org
-# mtllib AlienPlant.mtl
+ mtllib AlienPlant.mtl
 o Object003_Mesh
 v -0.357812 2.542686 0.817257
 v 0.057568 2.401075 -0.116874

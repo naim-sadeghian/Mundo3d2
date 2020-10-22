@@ -11,15 +11,17 @@
 #include <time.h>
 #include "glm/glm.h"
 #include "Objeto3D.h"
+#include "FreeImage/FreeImage.h"
 
 //-----------------------------------------------------------------------------
-
+GLuint texid[2];
 
 class myWindow : public cwc::glutWindow
 {
 protected:
    cwc::glShaderManager SM;
    cwc::glShader *shader;
+   cwc::glShader* shader1;
    GLuint ProgramObject;
    clock_t time0,time1;
    float timer010;  // timer counting 0->1->0
@@ -31,8 +33,42 @@ protected:
    Objeto3D nave;
    Objeto3D torre;
 
+
 public:
 	myWindow(){}
+
+    void initialize_textures(int numTex, char* nombreArchivo)
+    {
+        int w, h;
+        GLubyte* data = 0;
+        //data = glmReadPPM("soccer_ball_diffuse.ppm", &w, &h);
+        //std::cout << "Read soccer_ball_diffuse.ppm, width = " << w << ", height = " << h << std::endl;
+
+        //dib1 = loadImage("soccer_ball_diffuse.jpg"); //FreeImage
+        
+        glGenTextures(1, &texid[numTex]);
+        glBindTexture(GL_TEXTURE_2D, texid[numTex]);
+        glTexEnvi(GL_TEXTURE_2D, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+        // Loading JPG file
+        FIBITMAP* bitmap = FreeImage_Load(
+            FreeImage_GetFileType(nombreArchivo, 0),
+
+            nombreArchivo);  //*** Para Textura: esta es la ruta en donde se encuentra la textura
+
+        FIBITMAP* pImage = FreeImage_ConvertTo32Bits(bitmap);
+        int nWidth = FreeImage_GetWidth(pImage);
+        int nHeight = FreeImage_GetHeight(pImage);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, nWidth, nHeight,
+            0, GL_BGRA, GL_UNSIGNED_BYTE, (void*)FreeImage_GetBits(pImage));
+
+        FreeImage_Unload(pImage);
+        //
+        glEnable(GL_TEXTURE_2D);
+    }
 
 	virtual void OnRender(void)
 	{
@@ -43,30 +79,38 @@ public:
       if (shader) shader->begin();
          //glRotatef(timer010*360, 0.5, 1.0f, 0.1f);
         // con esto se dibujan las mallas 
-        
-      
-        astronauta.DibujarMalla(0.0, -0.3, 1.0);
-        
-        
-        glPopMatrix();
-        glPushMatrix();
-        nave.DibujarMalla(2.0, 0.0, 2.0);
-        glPopMatrix();
-        glPushMatrix();
-        planta.DibujarMalla(-4.0, 0.0, 0.0);
-        glPopMatrix();
-        glPushMatrix();
-        cristal.DibujarMalla(2.0, 0.0, -1.0);
-        cristal.DibujarMalla(-1.0, 0.0, 0.0);
+          glPushMatrix();
+          nave.DibujarMalla(2.0, 0.0, 2.0, FALSE);
+          glPopMatrix();
 
-        glPopMatrix();
-        glPushMatrix();
-        glRotatef(270, 0.0, 1.0, 0.0);
-        torre.DibujarMalla(-1.0, 0.0, 1.0);
-        glPopMatrix();
+          glPushMatrix();
+          planta.DibujarMalla(-4.0, 0.0, 0.0, FALSE);
+          glPopMatrix();
+
+          glPushMatrix();
+          cristal.DibujarMalla(2.0, 0.0, -1.0, FALSE);
+          cristal.DibujarMalla(-1.0, 0.0, 0.0, FALSE);
+          glPopMatrix();
+
+          glPushMatrix();
+          glRotatef(270, 0.0, 1.0, 0.0);
+          torre.DibujarMalla(-1.0, 0.0, 1.0, FALSE);
+          glPopMatrix();
+
+
       if (shader) shader->end();
-      glutSwapBuffers();
+
+      //Dibuja los texturizados-------------------------------
+      if (shader1) shader1->begin();
+        glPushMatrix();
+        glBindTexture(GL_TEXTURE_2D, texid[0]);
+        astronauta.DibujarMalla(0.0, -0.3, 1.0, TRUE);
+        glPopMatrix();
+        if (shader1) shader1->end();
+        
       
+      glutSwapBuffers();
+      glPopMatrix();
 
       UpdateTimer();
 
@@ -79,6 +123,7 @@ public:
 	// is already available!
 	virtual void OnInit()
 	{
+        initialize_textures(texid[0], "./modelos/DefaultMaterial_Base_Color.jpg");
 		glClearColor(0.5f, 0.5f, 1.0f, 0.0f);
 		glShadeModel(GL_SMOOTH);
 		glEnable(GL_DEPTH_TEST);
@@ -97,6 +142,15 @@ public:
       {
          ProgramObject = shader->GetProgramObject();
       }
+
+        //*** Para Textura: abre los shaders para texturas
+        shader1 = SM.loadfromFile("vertexshaderT.txt", "fragmentshaderT.txt"); // load (and compile, link) from file
+        if (shader1 == 0)
+            std::cout << "Error Loading, compiling or linking shader\n";
+        else
+        {
+            ProgramObject = shader1->GetProgramObject();
+        }
 
       time0 = clock();
       timer010 = 0.0f;
@@ -173,7 +227,7 @@ public:
      
      // Light model parameters:
      // -------------------------------------------
-     
+     /*
      GLfloat lmKa[] = {0.0, 0.0, 0.0, 0.0 };
      glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmKa);
      
@@ -199,34 +253,35 @@ public:
      glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, Kl);
      glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, Kq);
      
-     
+     */
      // ------------------------------------------- 
      // Lighting parameters:
-
+     
      GLfloat light_pos[] = {0.0f, 5.0f, 5.0f, 1.0f};
      GLfloat light_Ka[]  = {1.0f, 0.5f, 0.5f, 1.0f};
      GLfloat light_Kd[]  = {1.0f, 0.1f, 0.1f, 1.0f};
      GLfloat light_Ks[]  = {1.0f, 1.0f, 1.0f, 1.0f};
-
+     /*
      glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
      glLightfv(GL_LIGHT0, GL_AMBIENT, light_Ka);
      glLightfv(GL_LIGHT0, GL_DIFFUSE, light_Kd);
      glLightfv(GL_LIGHT0, GL_SPECULAR, light_Ks);
-
+     */
      // -------------------------------------------
      // Material parameters:
-
+     
      GLfloat material_Ka[] = {0.5f, 0.0f, 0.0f, 1.0f};
      GLfloat material_Kd[] = {0.4f, 0.4f, 0.5f, 1.0f};
      GLfloat material_Ks[] = {0.8f, 0.8f, 0.0f, 1.0f};
      GLfloat material_Ke[] = {0.1f, 0.0f, 0.0f, 0.0f};
      GLfloat material_Se = 20.0f;
-
+     /*
      glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, material_Ka);
      glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, material_Kd);
      glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, material_Ks);
      glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, material_Ke);
      glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, material_Se);
+     */
    }
 };
 
@@ -240,6 +295,7 @@ public:
 
 //-----------------------------------------------------------------------------
 
+//---------------------------------------------------------------------------------------
 int main(void)
 {
 	myApplication*  pApp = new myApplication;
