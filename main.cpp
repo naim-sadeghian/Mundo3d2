@@ -24,6 +24,8 @@ protected:
    cwc::glShader* shader1;
    GLuint ProgramObject;
    clock_t time0,time1;
+   float posCamX, posCamY, posCamZ;
+   bool moveXI, moveXD, moveYU, moveYD, moveZF, moveZB;
    float timer010;  // timer counting 0->1->0
    bool bUp;        // flag if counting up or down.
    // objetos que seran dibujados
@@ -69,13 +71,41 @@ public:
         //
         glEnable(GL_TEXTURE_2D);
     }
+    
+    void moverCamara() {
+        if (moveXI == true) {
+            //std::cout << "entro";
+            posCamX = posCamX + 0.1;
+        }
+        if (moveXD == true) {
+            posCamX = posCamX - 0.1;
+        }
+        if (moveYU == true) {
+            posCamY = posCamY - 0.1;
+        }
+        if (moveYD == true) {
+            posCamY = posCamY + 0.1;
+        }
+        if (moveZF == true) {
+            posCamZ = posCamZ + 0.1;
+        }
+        if (moveZB == true) {
+            posCamZ = posCamZ - 0.1;
+        }
 
+        glTranslatef(posCamX, posCamY, posCamZ);
+        
+    }
 	virtual void OnRender(void)
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
       //timer010 = 0.09; //for screenshot!
       glPushMatrix();
+      //Movimiento de camara
+      moverCamara();
+      
+
       if (shader) shader->begin();
          //glRotatef(timer010*360, 0.5, 1.0f, 0.1f);
         // con esto se dibujan las mallas 
@@ -127,6 +157,7 @@ public:
 		glClearColor(0.5f, 0.5f, 1.0f, 0.0f);
 		glShadeModel(GL_SMOOTH);
 		glEnable(GL_DEPTH_TEST);
+        
 
         // documentos que contienen las mallas
         planta.AbrirMalla("./modelos/AlienPlant.obj");
@@ -157,7 +188,16 @@ public:
       bUp = true;
 
       DemoLight();
-
+      
+      posCamX = 0.0;
+      posCamY = 0.0;
+      posCamZ = 0.0;
+      moveXI = false;
+      moveXD = false;
+      moveYU = false;
+      moveYD = false;
+      moveZF = false;
+      moveZB = false;
 	}
 
 	virtual void OnResize(int w, int h)
@@ -183,8 +223,22 @@ public:
 	virtual void OnMouseWheel(int nWheelNumber, int nDirection, int x, int y){}
 
 	virtual void OnKeyDown(int nKey, char cAscii)
-	{       
-		if (cAscii == 27) // 0x1b = ESC
+	{     
+        if (cAscii == 'a')
+            moveXI = true;
+
+        else if (cAscii == 'd')
+            moveXD = true;
+        else if (cAscii == 'w')
+            moveYU = true;
+        else if (cAscii == 's')
+            moveYD = true;
+        else if (cAscii == 'q')
+            moveZF = true;
+        else if (cAscii == 'e')
+            moveZB = true;
+
+		else if (cAscii == 27) // 0x1b = ESC
 		{
 			this->Close(); // Close Window!
 		} 
@@ -192,7 +246,22 @@ public:
 
 	virtual void OnKeyUp(int nKey, char cAscii)
 	{
-      if (cAscii == 's')      // s: Shader
+
+        if (cAscii == 'a')
+            moveXI = false;
+
+        else if (cAscii == 'd')
+            moveXD = false;
+        else if (cAscii == 'w')
+            moveYU = false;
+        else if (cAscii == 's')
+            moveYD = false;
+        else if (cAscii == 'q')
+            moveZF = false;
+        else if (cAscii == 'e')
+            moveZB = false;
+
+      else if (cAscii == 'o')      // s: Shader
          shader->enable();
       else if (cAscii == 'f') // f: Fixed Function
          shader->disable();
