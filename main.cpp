@@ -127,6 +127,17 @@ public:
           torre.DibujarMalla(-1.0, 0.0, 1.0, FALSE);
           glPopMatrix();
 
+          glPushMatrix();
+          glTranslatef(5, 4, -3);
+          glTranslatef(timer010 * 4, timer010 * -5, 0);
+          glutSolidSphere(0.5, 20, 20);
+          glPopMatrix();
+
+          glPushMatrix();
+          glTranslatef(7, 6, -3);
+          glTranslatef(timer010 * 4, timer010 * -5, 0);
+          glutSolidSphere(0.5, 20, 20);
+          glPopMatrix();
 
       if (shader) shader->end();
 
